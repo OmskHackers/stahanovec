@@ -9,4 +9,4 @@ ADD dos.c /home/stahanovec/dos.c
 
 RUN gcc dos.c -lpthread -O3 -o dos
 
-CMD ./dos $TARGET $PORT $DELAY_MS
+CMD ./dos $TARGET $PORT $DELAY_MS $THREADS

